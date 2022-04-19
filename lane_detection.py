@@ -75,3 +75,24 @@ def binary_thresholded(img):
     #cv2.waitKey(0)
     ####################2##################
     return binary
+
+
+###Function 3: Detection of Lane Lines Using Histogram ###
+
+def find_lane_pixels_using_histogram(binary_warped):
+
+    # Take a histogram of the bottom half of the image
+    histogram = np.sum(binary_warped[binary_warped.shape[0]//2:,:], axis=0)
+    
+    # Find the peak of the left and right halves of the histogram
+    # These will be the starting point for the left and right lines
+    midpoint = np.int(histogram.shape[0]//2)
+    leftx_base = np.argmax(histogram[:midpoint])
+    rightx_base = np.argmax(histogram[midpoint:]) + midpoint
+
+    # Choose the number of sliding windows
+    nwindows = 9
+    # Set the width of the windows +/- margin
+    margin = 100
+    # Set minimum number of pixels found to recenter window
+    minpix = 50
