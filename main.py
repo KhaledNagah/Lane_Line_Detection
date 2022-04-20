@@ -2,7 +2,7 @@
 
 import numpy as np
 import cv2
-from moviepy.editor import VideoFileClip
+#from moviepy.editor import VideoFileClip
 import pipeline
 import globals
 import sys
