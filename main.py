@@ -5,6 +5,7 @@ import cv2
 from moviepy.editor import VideoFileClip
 import pipeline
 import globals
+import sys
 
 globals.init()
 
@@ -12,10 +13,10 @@ globals.init()
 ##Working on an input video
 #cap=cv2.VideoCapture("project_video.mp4")
 
-src_path=input("Enter the source video path: ")
-dstn_path=input("Enter the destination video path: ")
-isDebug=input("Enter 0 for no debbuged output video, 1 for debugged output video: ")
-cap=cv2.VideoCapture(src_path)
+#src_path=input("Enter the source video path: ")
+#dstn_path=input("Enter the destination video path: ")
+#isDebug=input("Enter 0 for no debbuged output video, 1 for debugged output video: ")
+cap=cv2.VideoCapture(sys.argv[1])
 
 fps=cap.get(cv2.CAP_PROP_FPS)
 frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
@@ -25,7 +26,7 @@ frameSize = (int(width), int(height))
 
 
 
-out = cv2.VideoWriter(dstn_path,0x7634706d , fps, frameSize)
+out = cv2.VideoWriter(sys.argv[2],0x7634706d , fps, frameSize)
 
 i=0
 while(cap.isOpened()):
@@ -33,7 +34,7 @@ while(cap.isOpened()):
     ret,frame=cap.read()
     if ret==1:
         #Call the pipeline in a single the captured frame from the video
-        out_frame=pipeline.lane_finding_pipeline(frame,isDebug)
+        out_frame=pipeline.lane_finding_pipeline(frame,sys.argv[3])
         out.write(out_frame)
         print("Producing output video, ",int((i/frame_count)*100),"% completed.", end='\r')
 
