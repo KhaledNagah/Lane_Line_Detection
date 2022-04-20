@@ -12,21 +12,15 @@ import fit_poly
 import measure_curvature_meters
 import position_measurement
 import project_lane_info
+import globals
 
-global left_fit_hist 
-left_fit_hist = np.array([])
 
-global right_fit_hist 
-right_fit_hist = np.array([])
 
 ### Function 9: The pipeline ###
 
 def lane_finding_pipeline(img,isDebug):
-    global left_fit_hist 
-    global right_fit_hist
-    global prev_left_fit
-    global prev_right_fit
-    global temp
+
+
 
     #Step 1
     binary_thresh = binaryThreshold.binary_thresholded(img)
@@ -37,41 +31,41 @@ def lane_finding_pipeline(img,isDebug):
     
     #Step 3
     #Find Lane from the histogram if it is the first frame
-    if (len(left_fit_hist) == 0):
-        temp = np.zeros_like(img)
+    if (len(globals.left_fit_hist) == 0):
+        project_lane_info.temp= np.zeros_like(img)
         # loop over the image, pixel by pixel
         for y in range(0, 720):
             for x in range(0, 1280):
                 # threshold the pixel
-                temp[y, x] = 255 if y>500 else 0
+                project_lane_info.temp[y, x] = 255 if y>500 else 0
         leftx, lefty, rightx, righty = find_lane_pixels_using_histogram.find_lane_pixels_using_histogram(binary_warped)
         left_fit, right_fit, left_fitx, right_fitx, ploty = fit_poly.fit_poly(binary_warped,leftx, lefty, rightx, righty)
         # Store fit in history
-        left_fit_hist = np.array(left_fit)
+        globals.left_fit_hist = np.array(left_fit)
         new_left_fit = np.array(left_fit)
-        left_fit_hist = np.vstack([left_fit_hist, new_left_fit])
-        right_fit_hist = np.array(right_fit)
+        globals.left_fit_hist = np.vstack([globals.left_fit_hist, new_left_fit])
+        globals.right_fit_hist = np.array(right_fit)
         new_right_fit = np.array(right_fit)
-        right_fit_hist = np.vstack([right_fit_hist, new_right_fit])
+        globals.right_fit_hist = np.vstack([globals.right_fit_hist, new_right_fit])
     #Find Lane from the previous polynomial if it is not the first frame
     else:
-        prev_left_fit = [np.mean(left_fit_hist[:,0]), np.mean(left_fit_hist[:,1]), np.mean(left_fit_hist[:,2])]
-        prev_right_fit = [np.mean(right_fit_hist[:,0]), np.mean(right_fit_hist[:,1]), np.mean(right_fit_hist[:,2])]
+        globals.prev_left_fit = [np.mean(globals.left_fit_hist[:,0]), np.mean(globals.left_fit_hist[:,1]), np.mean(globals.left_fit_hist[:,2])]
+        globals.prev_right_fit = [np.mean(globals.right_fit_hist[:,0]), np.mean(globals.right_fit_hist[:,1]), np.mean(globals.right_fit_hist[:,2])]
         leftx, lefty, rightx, righty = find_lane_pixels_using_prev_poly.find_lane_pixels_using_prev_poly(binary_warped)
         if (len(lefty) == 0 or len(righty) == 0):
             leftx, lefty, rightx, righty = find_lane_pixels_using_histogram.find_lane_pixels_using_histogram(binary_warped)
-        left_fit, right_fit, left_fitx, right_fitx, ploty = fit_poly(binary_warped,leftx, lefty, rightx, righty)
+        left_fit, right_fit, left_fitx, right_fitx, ploty = fit_poly.fit_poly(binary_warped,leftx, lefty, rightx, righty)
         
         # Add new values to history
         new_left_fit = np.array(left_fit)
-        left_fit_hist = np.vstack([left_fit_hist, new_left_fit])
+        globals.left_fit_hist = np.vstack([globals.left_fit_hist, new_left_fit])
         new_right_fit = np.array(right_fit)
-        right_fit_hist = np.vstack([right_fit_hist, new_right_fit])
+        globals.right_fit_hist = np.vstack([globals.right_fit_hist, new_right_fit])
         
         # Remove old values from history
-        if (len(left_fit_hist) > 10):
-            left_fit_hist = np.delete(left_fit_hist, 0,0)
-            right_fit_hist = np.delete(right_fit_hist, 0,0)
+        if (len(globals.left_fit_hist) > 10):
+            globals.left_fit_hist = np.delete(globals.left_fit_hist, 0,0)
+            globals.right_fit_hist = np.delete(globals.right_fit_hist, 0,0)
                                        
     left_curverad, right_curverad =  measure_curvature_meters.measure_curvature_meters(binary_warped, left_fitx, right_fitx, ploty)
     veh_pos = position_measurement.measure_position_meters(binary_warped, left_fit, right_fit) 
