@@ -11,11 +11,13 @@ echo -n "Operation Mode: "
 read mode
 
 # Calling the Python interpreter and passing the arguments to the main program
+python3 main.py $input_path $output_path $mode
 
-if which python3 >/dev/null; then
-  python3 main.py $input_path $output_path $mode
-elif which python >/dev/null; then
-  python main.py $input_path $output_path $mode
-else
-  echo "This machine don't have python"
-fi
+
+# if which python3 >/dev/null; then
+#   python3 main.py $input_path $output_path $mode
+# elif which python >/dev/null; then
+#   python main.py $input_path $output_path $mode
+# else
+#   echo "This machine don't have python"
+# fi
