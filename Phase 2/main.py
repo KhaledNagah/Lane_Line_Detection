@@ -103,3 +103,24 @@ def extract_features(imgs, cspace='RGB', spatial_size=(32, 32),
         features.append(np.concatenate(file_features))
     # Return list of feature vectors
     return features
+  
+"""1C: Load images from the dataset"""
+def read_images(vehicles_dir,non_vehicles_dir):
+    #Read cars and not-cars images
+    # images are divided up into vehicles and non-vehicles
+    cars = []
+    notcars = []
+
+    # Read vehicle images
+    images = glob.iglob(vehicles_dir + '/**/*.png', recursive=True)
+
+    for image in images:
+            cars.append(image)
+
+    # Read non-vehicle images
+    images = glob.iglob(non_vehicles_dir + '/**/*.png', recursive=True)
+
+    for image in images:
+            notcars.append(image)
+    
+    return cars, notcars
