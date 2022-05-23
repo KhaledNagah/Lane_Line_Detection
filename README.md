@@ -1,4 +1,4 @@
-# Lane_Line_Detection
+# Lane_Line_Detection (Phase 1)
 
 ## Dependencies
 > Note: `Python 3 & pip package installer` are required.
