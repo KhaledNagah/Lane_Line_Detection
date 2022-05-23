@@ -21,7 +21,7 @@ chmod +x run.sh
 ```
 - Then you'll be asked to enter the source path & output file path.
 > `Example:`
-Source File Path: ./Project_video.mp4
+Source File Path: ./project_video.mp4
 Output File Path: ./out_video.mp4
 - Wait till the progress bar finished counting, then go to check the output video at the output path you entered.
 > `Example:`
